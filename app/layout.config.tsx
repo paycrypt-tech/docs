@@ -1,4 +1,4 @@
-import type { BaseLayoutProps } from 'fumadocs-ui/layouts/shared';
+import type { BaseLayoutProps } from "fumadocs-ui/layouts/shared";
 
 /**
  * Shared layout configurations
@@ -12,22 +12,25 @@ export const baseOptions: BaseLayoutProps = {
     title: (
       <>
         <svg
+          xmlns="http://www.w3.org/2000/svg"
           width="24"
           height="24"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-label="Logo"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="tabler-icon tabler-icon-inner-shadow-top size-6"
         >
-          <circle cx={12} cy={12} r={12} fill="currentColor" />
+          <path d="M5.636 5.636a9 9 0 1 0 12.728 12.728a9 9 0 0 0 -12.728 -12.728z"></path>
+          <path d="M16.243 7.757a6 6 0 0 0 -8.486 0"></path>
         </svg>
-        My App
+        Paycrypt
       </>
     ),
+    transparentMode: "top",
   },
-  links: [
-    {
-      text: 'Documentation',
-      url: '/docs',
-      active: 'nested-url',
-    },
-  ],
+  githubUrl: "https://github.com/paycrypt-tech",
+  links: [],
 };
