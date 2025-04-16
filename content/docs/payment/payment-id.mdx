@@ -1,0 +1,23 @@
+---
+title: Get Payment Status by ID (/payment/:id)
+description: Retrieves the status of a payment by its ID.
+full: true
+_openapi:
+  method: GET
+  route: /payment/{id}
+  toc: []
+  structuredData:
+    headings: []
+    contents:
+      - content: Retrieves the status of the payment using the payment ID.
+---
+
+import apiDocsJson from "../api-docs.json";
+
+<APIPage
+  document={apiDocsJson}
+  operations={[{ path: "/payment/{id}", method: "get" }]}
+  webhooks={[]}
+  hasHead={false}
+/>
+

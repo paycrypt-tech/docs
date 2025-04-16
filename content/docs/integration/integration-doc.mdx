@@ -1,0 +1,61 @@
+---
+title: Integration Guide
+description: How to integrate with PayCrypt- API usage, webhooks, SDKs, and message formats.
+---
+
+## Overview
+This guide covers integrating PayCrypt into your application, including:
+- API usage (REST)
+- Webhooks for payment notifications
+- SDKs (coming soon)
+- RabbitMQ message formats
+
+## API Integration
+- Obtain an API key via `/api-key/create` (JWT required)
+- Use REST endpoints as documented in [API Reference](./api.md)
+- Authenticate with `X-API-Key` header for payment endpoints
+- Use JWT for merchant endpoints
+
+## Webhooks
+- Configure webhook URLs when creating payment links or payments
+- PayCrypt will POST payment status updates to your webhook
+- Example webhook payload:
+```json
+{
+  "event": "payment_completed",
+  "payment_id": "...",
+  "amount": 100.0,
+  "currency": "USDT",
+  "status": "confirmed",
+  "timestamp": "..."
+}
+```
+- Handle idempotency and verify signatures (see security.md)
+
+## RabbitMQ Message Formats
+- Payment events are published to RabbitMQ for async processing
+- Example message (JSON):
+```json
+{
+  "event": "merchant_signup",
+  "merchant_id": "...",
+  "email": "..."
+}
+```
+- See `/docs/API.md` for event types and payloads
+
+## SDKs
+- Official SDKs for Go, Node.js, and Python are planned
+- Use REST API directly until SDKs are released
+
+## Integration Example
+```bash
+curl -X POST https://api.paycrypt.tech/payment/create \
+  -H "X-API-Key: <your-api-key>" \
+  -H "Content-Type: application/json" \
+  -d '{ "amount": 100, "currency": "USDT", "network": "ETH", "mode": "mainnet", "email": "customer@email.com" }'
+```
+
+## See Also
+- [API Reference](./api.md)
+- [Business Logic](./business.md)

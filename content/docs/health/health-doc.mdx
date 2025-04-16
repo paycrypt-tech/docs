@@ -1,0 +1,44 @@
+---
+title: System Health Check
+description: Checks the health of the system.
+full: true
+_openapi:
+  method: GET
+  route: /api/health
+  toc: []
+  structuredData:
+    headings: []
+    contents:
+      - content: Checks the health of the system and returns a status.
+---
+
+import apiDocsJson from "../api-docs.json";
+
+<APIPage
+  document={apiDocsJson}
+  operations={[{ path: "/api/health", method: "get" }]}
+  webhooks={[]}
+  hasHead={false}
+/>
+
+
+---
+
+## Error Codes
+
+| Code | Meaning                       |
+|------|-------------------------------|
+| 200  | Success                       |
+| 201  | Created                       |
+| 204  | No Content                    |
+| 400  | Bad Request                   |
+| 401  | Unauthorized                  |
+| 403  | Forbidden                     |
+| 404  | Not Found                     |
+| 409  | Conflict                      |
+| 429  | Too Many Requests (rate limit) |
+| 500  | Internal Server Error         |
+
+> _For detailed error response formats, see each endpoint above._
+
+---

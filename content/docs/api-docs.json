@@ -1,0 +1,913 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "PayCrypt API",
+    "description": "API for cryptocurrency payments processing",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/auth/register": {
+      "post": {
+        "summary": "Register a new merchant account",
+        "operationId": "registerMerchant",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "merchant@email.com"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Account created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "merchant_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "jwt-token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "409": {
+            "description": "Conflict - account already exists"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "summary": "Merchant login",
+        "operationId": "loginMerchant",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "merchant@email.com"
+                  },
+                  "password": {
+                    "type": "string"
+                  }
+                },
+                "required": ["email", "password"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "jwt-token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/auth/google": {
+      "post": {
+        "summary": "Google OAuth login",
+        "operationId": "googleAuth",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "id_token": {
+                    "type": "string",
+                    "example": "google-oauth-id-token"
+                  }
+                },
+                "required": ["id_token"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "token": {
+                      "type": "string",
+                      "example": "jwt-token"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["Auth"]
+      }
+    },
+    "/payment/create": {
+      "post": {
+        "summary": "Create a new payment request",
+        "operationId": "createPayment",
+        "security": [{
+          "apiKey": []
+        }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "amount": {
+                    "type": "number",
+                    "example": 100.0
+                  },
+                  "currency": {
+                    "type": "string",
+                    "enum": ["ETH", "BTC", "SOL", "USDT", "USDC"],
+                    "example": "ETH"
+                  },
+                  "network": {
+                    "type": "string",
+                    "enum": ["MAINNET", "SOLANA"],
+                    "example": "MAINNET"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": ["MAIN", "TEST"],
+                    "example": "MAIN"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "customer@email.com"
+                  }
+                },
+                "required": ["amount", "currency", "network", "mode", "email"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Payment created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "payment_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "address": {
+                      "type": "string",
+                      "example": "crypto-address"
+                    },
+                    "qr_data": {
+                      "type": "string"
+                    },
+                    "amount": {
+                      "type": "number",
+                      "example": 100.0
+                    },
+                    "currency": {
+                      "type": "string",
+                      "example": "ETH"
+                    },
+                    "network": {
+                      "type": "string",
+                      "example": "MAINNET"
+                    },
+                    "mode": {
+                      "type": "string",
+                      "example": "MAIN"
+                    },
+                    "label": {
+                      "type": "string",
+                      "example": "Send ETH on Mainnet (MAIN)"
+                    },
+                    "email": {
+                      "type": "string",
+                      "example": "customer@email.com"
+                    },
+                    "expiry": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-04-15T21:30:09Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Too many requests"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["Payment"]
+      }
+    },
+    "/payment/{id}": {
+      "get": {
+        "summary": "Get payment status by payment ID",
+        "operationId": "getPaymentStatus",
+        "security": [{
+          "apiKey": []
+        }],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Payment details retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "payment_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": ["pending", "completed", "expired", "failed"]
+                        },
+                        "amount": {
+                          "type": "number",
+                          "example": 100.0
+                        },
+                        "currency": {
+                          "type": "string",
+                          "example": "ETH"
+                        },
+                        "network": {
+                          "type": "string",
+                          "example": "MAINNET"
+                        },
+                        "mode": {
+                          "type": "string",
+                          "example": "MAIN"
+                        },
+                        "address": {
+                          "type": "string",
+                          "example": "crypto-address"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "customer@email.com"
+                        },
+                        "expiry": {
+                          "type": "string",
+                          "format": "date-time",
+                          "example": "2025-04-15T21:30:09Z"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["Payment"]
+      }
+    },
+    "/links/create": {
+      "post": {
+        "summary": "Create a new payment link",
+        "operationId": "createPaymentLink",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Payment link created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "link_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "url": {
+                      "type": "string",
+                      "example": "https://paycrypt.tech/pay/link-uuid"
+                    },
+                    "expiry": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-04-15T21:30:09Z"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["Payment Links"]
+      }
+    },
+    "/links/{id}": {
+      "get": {
+        "summary": "Get payment link details",
+        "operationId": "getPaymentLink",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }],
+        "responses": {
+          "200": {
+            "description": "Payment link details retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "link_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "url": {
+                          "type": "string",
+                          "example": "https://paycrypt.tech/pay/link-uuid"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": ["active", "expired", "completed", "cancelled"]
+                        },
+                        "payment_details": {
+                          "$ref": "#/components/schemas/PaymentDetails"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "expiry": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["Payment Links"]
+      },
+      "delete": {
+        "summary": "Delete a payment link",
+        "operationId": "deletePaymentLink",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }],
+        "responses": {
+          "204": {
+            "description": "Payment link deleted successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["Payment Links"]
+      }
+    },
+    "/api-key/generate": {
+      "post": {
+        "summary": "Generate a new API key",
+        "operationId": "generateApiKey",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "responses": {
+          "201": {
+            "description": "API key generated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "api_key": {
+                      "type": "string",
+                      "example": "api-key-value"
+                    },
+                    "key_id": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "429": {
+            "description": "Too many keys generated"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["API Keys"]
+      }
+    },
+    "/api-key/{id}": {
+      "delete": {
+        "summary": "Delete an API key",
+        "operationId": "deleteApiKey",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "parameters": [{
+          "name": "id",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }],
+        "responses": {
+          "204": {
+            "description": "API key deleted successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["API Keys"]
+      }
+    },
+    "/merchant": {
+      "get": {
+        "summary": "Get merchant info",
+        "operationId": "getMerchantInfo",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "responses": {
+          "200": {
+            "description": "Merchant details retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "merchant_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "email": {
+                          "type": "string",
+                          "example": "merchant@email.com"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "active_payment_links": {
+                          "type": "integer",
+                          "example": 5
+                        },
+                        "total_transactions": {
+                          "type": "integer",
+                          "example": 42
+                        },
+                        "balance": {
+                          "type": "number",
+                          "example": 1234.56
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["Merchant"]
+      }
+    },
+    "/metrics/dashboard": {
+      "get": {
+        "summary": "Get dashboard stats",
+        "operationId": "getDashboardMetrics",
+        "security": [{
+          "bearerAuth": []
+        }],
+        "responses": {
+          "200": {
+            "description": "Metrics retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "success"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "total_transactions": {
+                          "type": "integer",
+                          "example": 150
+                        },
+                        "total_volume": {
+                          "type": "number",
+                          "example": 12345.67
+                        },
+                        "success_rate": {
+                          "type": "number",
+                          "example": 0.95
+                        },
+                        "active_payment_links": {
+                          "type": "integer",
+                          "example": 7
+                        },
+                        "currencies": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "number"
+                          },
+                          "example": {
+                            "ETH": 5000,
+                            "BTC": 3000,
+                            "USDT": 4345.67
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        },
+        "tags": ["Metrics"]
+      }
+    },
+    "/api/health": {
+      "get": {
+        "summary": "System health check",
+        "operationId": "healthCheck",
+        "responses": {
+          "200": {
+            "description": "System is healthy",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "example": "ok"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "tags": ["Health"]
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-Key"
+      },
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "PaymentRequest": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "example": 100.0
+          },
+          "currency": {
+            "type": "string",
+            "enum": ["ETH", "BTC", "SOL", "USDT", "USDC"],
+            "example": "ETH"
+          },
+          "network": {
+            "type": "string",
+            "enum": ["MAINNET", "SOLANA"],
+            "example": "MAINNET"
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["MAIN", "TEST"],
+            "example": "MAIN"
+          },
+          "email": {
+            "type": "string",
+            "example": "customer@email.com"
+          },
+          "description": {
+            "type": "string",
+            "example": "Payment for services"
+          }
+        },
+        "required": ["amount", "currency", "network", "mode", "email"]
+      },
+      "PaymentDetails": {
+        "type": "object",
+        "properties": {
+          "amount": {
+            "type": "number",
+            "example": 100.0
+          },
+          "currency": {
+            "type": "string",
+            "example": "ETH"
+          },
+          "network": {
+            "type": "string",
+            "example": "MAINNET"
+          },
+          "mode": {
+            "type": "string",
+            "example": "MAIN"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["pending", "completed", "expired", "failed"]
+          },
+          "payment_id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Auth",
+      "description": "Authentication endpoints"
+    },
+    {
+      "name": "Payment",
+      "description": "Payment processing endpoints"
+    },
+    {
+      "name": "Payment Links",
+      "description": "Payment link management endpoints"
+    },
+    {
+      "name": "API Keys",
+      "description": "API key management endpoints"
+    },
+    {
+      "name": "Merchant",
+      "description": "Merchant account endpoints"
+    },
+    {
+      "name": "Metrics",
+      "description": "Analytics and metrics endpoints"
+    },
+    {
+      "name": "Health",
+      "description": "System health check"
+    }
+  ]
+}

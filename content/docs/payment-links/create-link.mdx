@@ -1,0 +1,22 @@
+---
+title: Create Payment Link
+description: Creates a new payment link with the specified parameters.
+full: true
+_openapi:
+  method: POST
+  route: /links/create
+  toc: []
+  structuredData:
+    headings: []
+    contents:
+      - content: Creates a new payment link with the provided amount, currency, and other details.
+---
+
+import apiDocsJson from "../api-docs.json";
+
+<APIPage
+  document={apiDocsJson}
+  operations={[{ path: "/links/create", method: "post" }]}
+  webhooks={[]}
+  hasHead={false}
+/>

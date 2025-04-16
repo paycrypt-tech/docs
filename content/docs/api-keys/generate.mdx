@@ -1,0 +1,31 @@
+---
+title: Generate API Key
+description: Generates a new API key for the user.
+full: true
+openapi:
+  method: POST
+  route: /api-key/generate
+  toc: []
+  structuredData:
+    headings: []
+    contents:
+      - content: Generates a new API key for the user.
+---
+
+import apiDocsJson from "../api-docs.json";
+
+<APIPage
+  document={apiDocsJson}
+  operations={[{ path: "/api-key/generate", method: "post" }]}
+  webhooks={[]}
+  hasHead={false}
+/>
+
+### POST /api-key/generate
+
+- **Description:** Generate a new API key
+- **Authentication:** JWT required
+- **Headers:**
+  - `Authorization: Bearer <jwt-token>`
+- **Success Response:** `201 Created`
+- **Error Responses:**

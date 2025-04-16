@@ -1,0 +1,45 @@
+---
+title: Security
+description: Best practices, authentication methods, rate limiting, and logging.
+---
+
+## Overview
+PayCrypt is a production-grade, high-security system. Key security features include:
+- JWT authentication for merchant endpoints
+- API key authentication for payment endpoints
+- Per-route rate limiting
+- Input validation and request signing
+- Logging middleware for audit trails
+- Secure handling of secrets and credentials
+
+## Authentication
+- **JWT:** Used for most merchant endpoints. Sent as `Authorization: Bearer <token>`
+- **API Key:** Used for payment creation. Sent as `X-API-Key` header
+- **OAuth:** Google OAuth for registration/login
+
+## Rate Limiting
+- Enforced at middleware level per route and per user
+- Rate limits are configurable in middleware
+- Exceeding the limit returns HTTP 429
+
+## Logging
+- Structured logging with request IDs and error tracking
+- Logs sensitive actions (auth, payments, key generation)
+- Logs are stored securely and monitored for anomalies
+
+## Input Validation
+- All incoming requests are validated for required fields and data types
+- Invalid requests return 400 with error details
+
+## Best Practices
+- Use strong, unique passwords for merchant accounts
+- Keep API keys and JWT tokens secret
+- Rotate API keys regularly
+- Use HTTPS in production
+- Enable 2FA and IP whitelisting (see roadmap)
+
+## See Also
+- [Monitoring](./monitoring.md)
+- [Compliance](./compliance.md)
+
+--
